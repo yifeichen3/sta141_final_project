@@ -40,7 +40,6 @@ ui <- fluidPage(
           pickerInput("level3", "Level:", choices = c("Global", "US"), selected = "Global", multiple = FALSE)
         ),
         mainPanel(
-          textOutput("text4"),
           tableOutput("summary"),
           plotOutput("plot3"),
           textOutput("text1"),
@@ -288,10 +287,6 @@ server <- function(input, output, session) {
     if (level1 != "-") {
       c <- "Summary Statistics"
     }
-  })
-  
-  output$text4 <- renderText({
-    c <- "Note: Due to memory issue, I saved one of the JSON file to csv, so the last day will be 2020-06-09"
   })
 
   output$text2 <- renderText({
