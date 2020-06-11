@@ -71,7 +71,7 @@ ui <- fluidPage(
           pickerInput("level", "Level:", choices = c("-", "Country", "Global", "US"), selected = "-", multiple = FALSE),
           pickerInput("state", "State/Country:", choices = c("-"), selected = "-", multiple = TRUE, options = list("max-options" = 10, "max-options-text" = "No more than 10")),
           pickerInput("type", "Type:", choices = c("-"), selected = "-", multiple = FALSE),
-          dateRangeInput("dateRange", label = "Date Range:", format = "yyyy/mm/dd", start = "2020-01-22", end = as.Date("2020-06-09"), min = "2020-01-22", max = as.Date("2020-06-09"), startview = "year", separator = " - ")
+          dateRangeInput("dateRange", label = "Date Range:", format = "yyyy/mm/dd", start = "2020-01-22", end = Sys.Date() - 2, min = "2020-01-22", max = Sys.Date() - 2, startview = "year", separator = " - ")
         ),
         mainPanel(
           plotOutput("plot1")
@@ -90,7 +90,7 @@ server <- function(input, output, session) {
     } else if (input$level == "US") {
       all_states <- all_data %>%
         filter(Country == "United States of America") %>%
-        filter(Date == as.Date("2020-06-09")) %>%
+        filter(Date == Sys.Date() - 2) %>%
         group_by(Province) %>%
         summarize(total_confirmed = sum(Confirmed)) %>%
         filter(Province != "")
@@ -107,7 +107,7 @@ server <- function(input, output, session) {
     } else if (input$level2 == "US") {
       all_states <- all_data %>%
         filter(Country == "United States of America") %>%
-        filter(Date == as.Date("2020-06-09")) %>%
+        filter(Date == Sys.Date() - 2) %>%
         group_by(Province) %>%
         summarize(total_confirmed = sum(Confirmed)) %>%
         filter(Province != "")
@@ -227,12 +227,12 @@ server <- function(input, output, session) {
     } else if (level1 == "Country") {
       data_without_US <- all_data %>%
         filter(Country != "United States of America") %>%
-        filter(Date == as.Date("2020-06-09")) %>%
+        filter(Date == Sys.Date() - 2) %>%
         group_by(Country) %>%
         summarize(total_confirmed = sum(Confirmed), total_deaths = sum(Deaths), total_recovered = sum(Recovered))
       data_US <- all_data %>%
         filter(Country == "United States of America") %>%
-        filter(Date == as.Date("2020-06-09")) %>%
+        filter(Date == Sys.Date() - 2) %>%
         group_by(Country) %>%
         summarize(total_confirmed = sum(Confirmed) / 2, total_deaths = sum(Deaths) / 2, total_recovered = sum(Recovered) / 2)
       data <- rbind(data_US, data_without_US)
@@ -263,7 +263,7 @@ server <- function(input, output, session) {
     level1 <- input$level3
     if (level1 == "Global") {
       data <- all_data %>%
-        filter(Date == as.Date("2020-06-09"))
+        filter(Date == Sys.Date() - 2)
       ggplot() +
         geom_polygon(data = world, aes(x = long, y = lat, group = group), fill = "grey", alpha = 0.5) +
         geom_point(data = data, aes(x = Lon, y = Lat, color = Confirmed, size = Confirmed), alpha = 0.7) +
